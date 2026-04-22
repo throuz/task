@@ -1,14 +1,21 @@
 import { useState } from 'react';
 import { useWallet } from '../hooks/useWallet';
 import { ErrorMessage, Loading, SuccessMessage } from '../components';
+import { CHAIN_ID } from '../blockchain';
 
 function truncateAddress(addr: string) {
   if (!addr || addr.length < 10) return addr;
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`;
 }
 
+function txExplorerUrl(hash: string) {
+  if (CHAIN_ID === 11155111) return `https://sepolia.etherscan.io/tx/${hash}`;
+  if (CHAIN_ID === 1) return `https://etherscan.io/tx/${hash}`;
+  return null;
+}
+
 export function BlockchainDemo() {
-  const { address, balance, txStatus, error, connect, disconnect, transfer, isConnected } = useWallet();
+  const { address, balance, txStatus, txHash, error, connect, disconnect, transfer, isConnected } = useWallet();
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useState('');
 
@@ -75,6 +82,18 @@ export function BlockchainDemo() {
             {txStatus === 'pending' ? <Loading /> : null}
             {txStatus === 'success' ? <SuccessMessage message="Transaction confirmed." /> : null}
             {txStatus === 'error' ? <ErrorMessage message="Transaction failed." /> : null}
+            {txHash ? (
+              <p style={{ marginTop: '0.5rem' }}>
+                <strong>Tx:</strong>{' '}
+                {txExplorerUrl(txHash) ? (
+                  <a href={txExplorerUrl(txHash) as string} target="_blank" rel="noreferrer">
+                    {truncateAddress(txHash)}
+                  </a>
+                ) : (
+                  truncateAddress(txHash)
+                )}
+              </p>
+            ) : null}
           </div>
         </>
       )}

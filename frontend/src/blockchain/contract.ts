@@ -10,10 +10,10 @@ export const publicClient = createPublicClient({
 });
 
 /**
- * Placeholder ABI – replace with your contract ABI from Swagger/artifact.
- * Example: read balance, and a write (e.g. transfer).
+ * Minimal ERC20 ABI for demo purposes.
+ * Used for: read `balanceOf` + write `transfer`.
  */
-export const EXAMPLE_ABI = [
+export const ERC20_ABI = [
   {
     name: 'balanceOf',
     type: 'function',
@@ -37,7 +37,7 @@ export async function readBalance(account: Address): Promise<bigint> {
   if (!CONTRACT_ADDRESS) return 0n;
   return publicClient.readContract({
     address: CONTRACT_ADDRESS,
-    abi: EXAMPLE_ABI,
+    abi: ERC20_ABI,
     functionName: 'balanceOf',
     args: [account],
   });
@@ -52,7 +52,7 @@ export async function writeTransfer(
   if (!CONTRACT_ADDRESS) throw new Error('Contract address not set');
   return walletClient.writeContract({
     address: CONTRACT_ADDRESS,
-    abi: EXAMPLE_ABI,
+    abi: ERC20_ABI,
     functionName: 'transfer',
     args: [to, amount],
     account,
