@@ -9,6 +9,34 @@ import {
 } from '../hooks/useApi';
 import { ErrorMessage, Loading } from '../components';
 
+const preStyle: React.CSSProperties = {
+  background: '#f1f5f9',
+  color: '#0f172a',
+  padding: '1rem',
+  borderRadius: '6px',
+  overflow: 'auto',
+  textAlign: 'left',
+  fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+  fontSize: 13,
+};
+
+function Success({ message }: { message: string }) {
+  return (
+    <div
+      style={{
+        marginTop: '0.5rem',
+        padding: '0.75rem',
+        borderRadius: 6,
+        background: '#ecfdf5',
+        border: '1px solid #bbf7d0',
+        color: '#065f46',
+      }}
+    >
+      <strong>Success:</strong> {message}
+    </div>
+  );
+}
+
 export function ApiDemo() {
   const health = useHealthcheck();
 
@@ -32,21 +60,6 @@ export function ApiDemo() {
   const [draftId, setDraftId] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [companyWebsite, setCompanyWebsite] = useState('');
-
-  const Success = ({ message }: { message: string }) => (
-    <div
-      style={{
-        marginTop: '0.5rem',
-        padding: '0.75rem',
-        borderRadius: 6,
-        background: '#ecfdf5',
-        border: '1px solid #bbf7d0',
-        color: '#065f46',
-      }}
-    >
-      <strong>Success:</strong> {message}
-    </div>
-  );
 
   return (
     <div>
@@ -98,7 +111,7 @@ export function ApiDemo() {
         {health.isLoading ? <Loading /> : null}
         {health.isSuccess ? <Success message="API is reachable." /> : null}
         {health.data ? (
-          <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
+          <pre style={preStyle}>
             {JSON.stringify(health.data, null, 2)}
           </pre>
         ) : null}
@@ -146,7 +159,7 @@ export function ApiDemo() {
         </div>
         {sendCode.isSuccess ? <Success message="Verification code sent. Check your email inbox." /> : null}
         {sendCode.isSuccess ? (
-          <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
+          <pre style={preStyle}>
             {JSON.stringify(sendCode.data ?? null, null, 2)}
           </pre>
         ) : null}
@@ -190,7 +203,7 @@ export function ApiDemo() {
         </div>
         {verifyEmail.isSuccess ? <Success message="Email verified. Token received." /> : null}
         {verifyEmail.isSuccess ? (
-          <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
+          <pre style={preStyle}>
             {JSON.stringify(verifyEmail.data ?? null, null, 2)}
           </pre>
         ) : null}
@@ -241,7 +254,7 @@ export function ApiDemo() {
         </div>
         {contact.isSuccess ? <Success message="Contact message submitted." /> : null}
         {contact.isSuccess ? (
-          <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
+          <pre style={preStyle}>
             {JSON.stringify(contact.data ?? null, null, 2)}
           </pre>
         ) : null}
@@ -277,7 +290,7 @@ export function ApiDemo() {
         </div>
         {draftCreate.isSuccess ? <Success message="Draft created." /> : null}
         {draftCreate.isSuccess ? (
-          <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
+          <pre style={preStyle}>
             {JSON.stringify(draftCreate.data ?? null, null, 2)}
           </pre>
         ) : null}
@@ -323,7 +336,7 @@ export function ApiDemo() {
         </div>
         {draftSave.isSuccess ? <Success message="Draft updated." /> : null}
         {draftSave.isSuccess ? (
-          <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
+          <pre style={preStyle}>
             {JSON.stringify(draftSave.data ?? null, null, 2)}
           </pre>
         ) : null}
