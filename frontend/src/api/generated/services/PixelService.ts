@@ -11,7 +11,7 @@ export class PixelService {
      * Bootstrap LaRevela pixel configuration
      * @param origin
      * @param env
-     * @param originQuery
+     * @param origin
      * @param referer
      * @returns PixelBootstrapConfig Successful Response
      * @throws ApiError
