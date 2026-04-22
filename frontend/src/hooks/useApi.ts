@@ -3,23 +3,29 @@ import {
   AuthService,
   type ContactMessageCreate,
   ContactMessagesService,
-  LookupsService,
+  HealthService,
+  type SendVerificationRequest,
+  type VerifyEmailRequest,
   type CreateDraftRequest,
   type SaveDraftRequest,
 } from '../api';
 
-export function useLookupCollections() {
+export function useHealthcheck() {
   return useQuery({
-    queryKey: ['lookups', 'collections'],
-    queryFn: () => LookupsService.listLookupCollectionsApiV1LookupsGet(),
+    queryKey: ['health'],
+    queryFn: () => HealthService.healthcheckHealthGet(),
   });
 }
 
-export function useLookup(lookupName: string | null) {
-  return useQuery({
-    queryKey: ['lookups', lookupName],
-    queryFn: () => LookupsService.getLookupApiV1LookupsLookupNameGet(lookupName as string),
-    enabled: !!lookupName,
+export function useSendVerificationCode() {
+  return useMutation({
+    mutationFn: (body: SendVerificationRequest) => AuthService.sendVerificationCodeApiV1AuthSendVerificationCodePost(body),
+  });
+}
+
+export function useVerifyEmail() {
+  return useMutation({
+    mutationFn: (body: VerifyEmailRequest) => AuthService.verifyEmailApiV1AuthVerifyEmailPost(body),
   });
 }
 
@@ -41,7 +47,7 @@ export function useSaveRegistrationDraft() {
   return useMutation({
     mutationFn: (body: SaveDraftRequest) => AuthService.saveRegistrationDraftApiV1AuthRegisterDraftPut(body),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['lookups'] });
+      queryClient.invalidateQueries({ queryKey: ['health'] });
     },
   });
 }

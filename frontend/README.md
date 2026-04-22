@@ -33,6 +33,20 @@ npm run dev
   ```
 - **Postman**: Use the provided collection to test endpoints; keep request/response shape aligned with the app.
 
+### Demo endpoints (no login required)
+
+The API includes both public and protected endpoints. The `ApiDemo` page is wired to endpoints that work without login:
+
+- `GET /health`
+- Registration draft flow:
+  - `POST /api/v1/auth/send-verification-code`
+  - `POST /api/v1/auth/verify-email`
+  - `POST /api/v1/auth/register/draft`
+  - `PUT /api/v1/auth/register/draft`
+- `POST /api/v1/contact-messages`
+
+Some endpoints (for example `GET /api/v1/lookups`) may return `401 Unauthorized` without an authenticated session.
+
 ## Blockchain
 
 - **Wallet**: Connect via MetaMask (or other injected provider). Chain and contract are read from env.
