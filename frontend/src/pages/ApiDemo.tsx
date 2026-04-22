@@ -87,12 +87,6 @@ export function ApiDemo() {
           Endpoint: <code>POST /api/v1/auth/send-verification-code</code>. Output includes a{' '}
           <code>verification_id</code>.
         </p>
-        {sendCode.isError ? (
-          <ErrorMessage
-            message={sendCode.error instanceof Error ? sendCode.error.message : 'Failed to send verification code'}
-            onDismiss={() => sendCode.reset()}
-          />
-        ) : null}
         <div
           style={{
             display: 'grid',
@@ -132,6 +126,13 @@ export function ApiDemo() {
             {sendCode.isPending ? 'Sending…' : 'Send code'}
           </button>
         </div>
+        {sendCode.isPending ? <Loading /> : null}
+        {sendCode.isError ? (
+          <ErrorMessage
+            message={sendCode.error instanceof Error ? sendCode.error.message : 'Failed to send verification code'}
+            onDismiss={() => sendCode.reset()}
+          />
+        ) : null}
         {sendCode.isSuccess ? <SuccessMessage message="Verification code sent. Check your email inbox." /> : null}
         {sendCode.isSuccess ? (
           <pre style={preStyle}>
@@ -143,12 +144,6 @@ export function ApiDemo() {
         <p style={{ marginTop: 0 }}>
           Endpoint: <code>POST /api/v1/auth/verify-email</code>. Output includes a <code>verification_token</code>.
         </p>
-        {verifyEmail.isError ? (
-          <ErrorMessage
-            message={verifyEmail.error instanceof Error ? verifyEmail.error.message : 'Failed to verify email'}
-            onDismiss={() => verifyEmail.reset()}
-          />
-        ) : null}
         <div
           style={{
             display: 'grid',
@@ -192,6 +187,13 @@ export function ApiDemo() {
             {verifyEmail.isPending ? 'Verifying…' : 'Verify'}
           </button>
         </div>
+        {verifyEmail.isPending ? <Loading /> : null}
+        {verifyEmail.isError ? (
+          <ErrorMessage
+            message={verifyEmail.error instanceof Error ? verifyEmail.error.message : 'Failed to verify email'}
+            onDismiss={() => verifyEmail.reset()}
+          />
+        ) : null}
         {verifyEmail.isSuccess ? <SuccessMessage message="Email verified. Token received." /> : null}
         {verifyEmail.isSuccess ? (
           <pre style={preStyle}>
@@ -205,12 +207,6 @@ export function ApiDemo() {
         <p style={{ marginTop: 0 }}>
           Endpoint: <code>POST /api/v1/contact-messages</code>. This is a simple “create” example.
         </p>
-        {contact.isError ? (
-          <ErrorMessage
-            message={contact.error instanceof Error ? contact.error.message : 'Contact submit failed'}
-            onDismiss={() => contact.reset()}
-          />
-        ) : null}
         <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
             type="text"
@@ -252,6 +248,13 @@ export function ApiDemo() {
             {contact.isPending ? 'Sending…' : 'Send'}
           </button>
         </div>
+        {contact.isPending ? <Loading /> : null}
+        {contact.isError ? (
+          <ErrorMessage
+            message={contact.error instanceof Error ? contact.error.message : 'Contact submit failed'}
+            onDismiss={() => contact.reset()}
+          />
+        ) : null}
         {contact.isSuccess ? <SuccessMessage message="Contact message submitted." /> : null}
         {contact.isSuccess ? (
           <pre style={preStyle}>
@@ -266,12 +269,6 @@ export function ApiDemo() {
           Endpoint: <code>POST /api/v1/auth/register/draft</code>. Requires a <code>verification_token</code> from the
           verification step above.
         </p>
-        {draftCreate.isError ? (
-          <ErrorMessage
-            message={draftCreate.error instanceof Error ? draftCreate.error.message : 'Draft create failed'}
-            onDismiss={() => draftCreate.reset()}
-          />
-        ) : null}
         <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
             type="text"
@@ -295,6 +292,13 @@ export function ApiDemo() {
             {draftCreate.isPending ? 'Creating…' : 'Create draft'}
           </button>
         </div>
+        {draftCreate.isPending ? <Loading /> : null}
+        {draftCreate.isError ? (
+          <ErrorMessage
+            message={draftCreate.error instanceof Error ? draftCreate.error.message : 'Draft create failed'}
+            onDismiss={() => draftCreate.reset()}
+          />
+        ) : null}
         {draftCreate.isSuccess ? <SuccessMessage message="Draft created." /> : null}
         {draftCreate.isSuccess ? (
           <pre style={preStyle}>
@@ -309,12 +313,6 @@ export function ApiDemo() {
           Endpoint: <code>PUT /api/v1/auth/register/draft</code>. Uses the <code>draft_id</code> returned by the previous
           step.
         </p>
-        {draftSave.isError ? (
-          <ErrorMessage
-            message={draftSave.error instanceof Error ? draftSave.error.message : 'Draft save failed'}
-            onDismiss={() => draftSave.reset()}
-          />
-        ) : null}
         <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
             type="text"
@@ -351,6 +349,13 @@ export function ApiDemo() {
             {draftSave.isPending ? 'Saving…' : 'Save draft'}
           </button>
         </div>
+        {draftSave.isPending ? <Loading /> : null}
+        {draftSave.isError ? (
+          <ErrorMessage
+            message={draftSave.error instanceof Error ? draftSave.error.message : 'Draft save failed'}
+            onDismiss={() => draftSave.reset()}
+          />
+        ) : null}
         {draftSave.isSuccess ? <SuccessMessage message="Draft updated." /> : null}
         {draftSave.isSuccess ? (
           <pre style={preStyle}>

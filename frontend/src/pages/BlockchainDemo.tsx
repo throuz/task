@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useWallet } from '../hooks/useWallet';
-import { ErrorMessage, SuccessMessage } from '../components';
+import { ErrorMessage, Loading, SuccessMessage } from '../components';
 
 function truncateAddress(addr: string) {
   if (!addr || addr.length < 10) return addr;
@@ -72,6 +72,7 @@ export function BlockchainDemo() {
             >
               {txStatus === 'pending' ? 'Pending…' : 'Transfer'}
             </button>
+            {txStatus === 'pending' ? <Loading /> : null}
             {txStatus === 'success' ? <SuccessMessage message="Transaction confirmed." /> : null}
             {txStatus === 'error' ? <ErrorMessage message="Transaction failed." /> : null}
           </div>
