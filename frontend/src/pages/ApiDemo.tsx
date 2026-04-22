@@ -72,48 +72,17 @@ export function ApiDemo() {
         via <code>VITE_API_TOKEN</code>, but the flows below are designed to work without login.
       </p>
 
-      {health.error && (
-        <ErrorMessage
-          message={health.error instanceof Error ? health.error.message : 'Failed to load healthcheck'}
-          onDismiss={() => health.refetch()}
-        />
-      )}
-      {sendCode.isError && (
-        <ErrorMessage
-          message={sendCode.error instanceof Error ? sendCode.error.message : 'Failed to send verification code'}
-          onDismiss={() => sendCode.reset()}
-        />
-      )}
-      {verifyEmail.isError && (
-        <ErrorMessage
-          message={verifyEmail.error instanceof Error ? verifyEmail.error.message : 'Failed to verify email'}
-          onDismiss={() => verifyEmail.reset()}
-        />
-      )}
-      {contact.isError && (
-        <ErrorMessage
-          message={contact.error instanceof Error ? contact.error.message : 'Contact submit failed'}
-          onDismiss={() => contact.reset()}
-        />
-      )}
-      {draftCreate.isError && (
-        <ErrorMessage
-          message={draftCreate.error instanceof Error ? draftCreate.error.message : 'Draft create failed'}
-          onDismiss={() => draftCreate.reset()}
-        />
-      )}
-      {draftSave.isError && (
-        <ErrorMessage
-          message={draftSave.error instanceof Error ? draftSave.error.message : 'Draft save failed'}
-          onDismiss={() => draftSave.reset()}
-        />
-      )}
-
       <section style={{ marginTop: '1.25rem' }}>
         <h2>1) Connectivity check</h2>
         <p style={{ marginTop: 0 }}>
           Endpoint: <code>GET /health</code>. If this succeeds, your base URL is correct and the API is reachable.
         </p>
+        {health.error ? (
+          <ErrorMessage
+            message={health.error instanceof Error ? health.error.message : 'Failed to load healthcheck'}
+            onDismiss={() => health.refetch()}
+          />
+        ) : null}
         {health.isLoading ? <Loading /> : null}
         {health.isSuccess ? <Success message="API is reachable." /> : null}
         {health.data ? (
@@ -135,6 +104,12 @@ export function ApiDemo() {
           Endpoint: <code>POST /api/v1/auth/send-verification-code</code>. Output includes a{' '}
           <code>verification_id</code>.
         </p>
+        {sendCode.isError ? (
+          <ErrorMessage
+            message={sendCode.error instanceof Error ? sendCode.error.message : 'Failed to send verification code'}
+            onDismiss={() => sendCode.reset()}
+          />
+        ) : null}
         <div
           style={{
             display: 'grid',
@@ -185,6 +160,12 @@ export function ApiDemo() {
         <p style={{ marginTop: 0 }}>
           Endpoint: <code>POST /api/v1/auth/verify-email</code>. Output includes a <code>verification_token</code>.
         </p>
+        {verifyEmail.isError ? (
+          <ErrorMessage
+            message={verifyEmail.error instanceof Error ? verifyEmail.error.message : 'Failed to verify email'}
+            onDismiss={() => verifyEmail.reset()}
+          />
+        ) : null}
         <div
           style={{
             display: 'grid',
@@ -241,6 +222,12 @@ export function ApiDemo() {
         <p style={{ marginTop: 0 }}>
           Endpoint: <code>POST /api/v1/contact-messages</code>. This is a simple “create” example.
         </p>
+        {contact.isError ? (
+          <ErrorMessage
+            message={contact.error instanceof Error ? contact.error.message : 'Contact submit failed'}
+            onDismiss={() => contact.reset()}
+          />
+        ) : null}
         <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
             type="text"
@@ -296,6 +283,12 @@ export function ApiDemo() {
           Endpoint: <code>POST /api/v1/auth/register/draft</code>. Requires a <code>verification_token</code> from the
           verification step above.
         </p>
+        {draftCreate.isError ? (
+          <ErrorMessage
+            message={draftCreate.error instanceof Error ? draftCreate.error.message : 'Draft create failed'}
+            onDismiss={() => draftCreate.reset()}
+          />
+        ) : null}
         <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
             type="text"
@@ -333,6 +326,12 @@ export function ApiDemo() {
           Endpoint: <code>PUT /api/v1/auth/register/draft</code>. Uses the <code>draft_id</code> returned by the previous
           step.
         </p>
+        {draftSave.isError ? (
+          <ErrorMessage
+            message={draftSave.error instanceof Error ? draftSave.error.message : 'Draft save failed'}
+            onDismiss={() => draftSave.reset()}
+          />
+        ) : null}
         <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
             type="text"
