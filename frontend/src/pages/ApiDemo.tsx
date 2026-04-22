@@ -7,7 +7,7 @@ import {
   useSubmitContactMessage,
   useVerifyEmail,
 } from '../hooks/useApi';
-import { ErrorMessage, Loading } from '../components';
+import { ErrorMessage, Loading, SuccessMessage } from '../components';
 
 const preStyle: React.CSSProperties = {
   background: '#f1f5f9',
@@ -21,20 +21,7 @@ const preStyle: React.CSSProperties = {
 };
 
 function Success({ message }: { message: string }) {
-  return (
-    <div
-      style={{
-        marginTop: '0.5rem',
-        padding: '0.75rem',
-        borderRadius: 6,
-        background: '#ecfdf5',
-        border: '1px solid #bbf7d0',
-        color: '#065f46',
-      }}
-    >
-      <strong>Success:</strong> {message}
-    </div>
-  );
+  return <SuccessMessage message={message} />;
 }
 
 export function ApiDemo() {
