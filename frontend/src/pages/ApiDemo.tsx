@@ -65,8 +65,11 @@ export function ApiDemo() {
     <div style={{ maxWidth: 900, margin: '0 auto' }}>
       <h1>API Demo</h1>
       <p>
-        Configure <code>VITE_API_BASE_URL</code> (e.g. <code>https://api.larevela.com</code>) and optionally{' '}
-        <code>VITE_API_TOKEN</code>. This page calls real endpoints from the provided OpenAPI spec.
+        This page demonstrates API integration with loading, error handling, and typed responses.
+      </p>
+      <p style={{ marginTop: 0 }}>
+        Configure <code>VITE_API_BASE_URL</code> (e.g. <code>https://api.larevela.com</code>). Some APIs may require auth
+        via <code>VITE_API_TOKEN</code>, but the flows below are designed to work without login.
       </p>
 
       {health.error && (
@@ -107,7 +110,10 @@ export function ApiDemo() {
       )}
 
       <section style={{ marginTop: '1.25rem' }}>
-        <h2>GET: /health</h2>
+        <h2>1) Connectivity check</h2>
+        <p style={{ marginTop: 0 }}>
+          Endpoint: <code>GET /health</code>. If this succeeds, your base URL is correct and the API is reachable.
+        </p>
         {health.isLoading ? <Loading /> : null}
         {health.isSuccess ? <Success message="API is reachable." /> : null}
         {health.data ? (
@@ -118,13 +124,17 @@ export function ApiDemo() {
       </section>
 
       <section style={{ marginTop: '1.25rem' }}>
-        <h2>POST + POST + POST + PUT: registration draft flow (no login required)</h2>
+        <h2>2) Registration draft flow (no login)</h2>
         <p style={{ marginTop: 0 }}>
-          This flow lets you complete a successful <strong>POST</strong> + <strong>PUT</strong> without needing API
-          login. You will receive a 6-digit code in your email.
+          Goal: demonstrate multiple writes (<strong>POST</strong> + <strong>PUT</strong>) using a realistic flow. You’ll
+          receive a 6‑digit code by email, then use it to create and update a registration draft.
         </p>
 
-        <h3 style={{ marginBottom: '0.5rem' }}>1) POST /api/v1/auth/send-verification-code</h3>
+        <h3 style={{ marginBottom: '0.5rem' }}>Step A — Send verification code</h3>
+        <p style={{ marginTop: 0 }}>
+          Endpoint: <code>POST /api/v1/auth/send-verification-code</code>. Output includes a{' '}
+          <code>verification_id</code>.
+        </p>
         <div
           style={{
             display: 'grid',
@@ -171,7 +181,10 @@ export function ApiDemo() {
           </pre>
         ) : null}
 
-        <h3 style={{ marginBottom: '0.5rem' }}>2) POST /api/v1/auth/verify-email</h3>
+        <h3 style={{ marginBottom: '0.5rem' }}>Step B — Verify email</h3>
+        <p style={{ marginTop: 0 }}>
+          Endpoint: <code>POST /api/v1/auth/verify-email</code>. Output includes a <code>verification_token</code>.
+        </p>
         <div
           style={{
             display: 'grid',
@@ -224,7 +237,10 @@ export function ApiDemo() {
       </section>
 
       <section style={{ marginTop: '1.25rem' }}>
-        <h2>POST (create): /api/v1/contact-messages</h2>
+        <h2>3) Create a contact message</h2>
+        <p style={{ marginTop: 0 }}>
+          Endpoint: <code>POST /api/v1/contact-messages</code>. This is a simple “create” example.
+        </p>
         <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
             type="text"
@@ -275,9 +291,10 @@ export function ApiDemo() {
       </section>
 
       <section style={{ marginTop: '1.25rem' }}>
-        <h2>POST: /api/v1/auth/register/draft</h2>
+        <h2>4) Create a registration draft</h2>
         <p style={{ marginTop: 0 }}>
-          This creates a registration draft. You need a <code>verification_token</code> from the email verification step.
+          Endpoint: <code>POST /api/v1/auth/register/draft</code>. Requires a <code>verification_token</code> from the
+          verification step above.
         </p>
         <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
@@ -311,7 +328,11 @@ export function ApiDemo() {
       </section>
 
       <section style={{ marginTop: '1.25rem' }}>
-        <h2>PUT (update): /api/v1/auth/register/draft</h2>
+        <h2>5) Update the registration draft</h2>
+        <p style={{ marginTop: 0 }}>
+          Endpoint: <code>PUT /api/v1/auth/register/draft</code>. Uses the <code>draft_id</code> returned by the previous
+          step.
+        </p>
         <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
             type="text"
