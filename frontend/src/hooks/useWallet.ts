@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { createWalletClient, custom, type Address } from 'viem';
-import { mainnet } from 'viem/chains';
+import { mainnet, sepolia } from 'viem/chains';
 import { CHAIN_ID, readBalance, writeTransfer } from '../blockchain';
 
-const chain = CHAIN_ID === 1 ? mainnet : mainnet;
+const chain = CHAIN_ID === 1 ? mainnet : sepolia;
 
 export type TxStatus = 'idle' | 'pending' | 'success' | 'error';
 
@@ -22,6 +22,18 @@ export function useWallet() {
     });
   }, []);
 
+  const ensureCorrectNetwork = useCallback(async () => {
+    const provider = window.ethereum;
+    if (!provider) return false;
+    const chainIdHex = (await provider.request({ method: 'eth_chainId' })) as string;
+    const current = Number.parseInt(chainIdHex, 16);
+    if (current !== CHAIN_ID) {
+      setError(`Wrong network. Please switch your wallet to chainId ${CHAIN_ID}.`);
+      return false;
+    }
+    return true;
+  }, []);
+
   const connect = useCallback(async () => {
     setError(null);
     try {
@@ -32,13 +44,14 @@ export function useWallet() {
       }
       const [acc] = (await provider.request({ method: 'eth_requestAccounts' })) as Address[];
       if (!acc) return;
+      if (!(await ensureCorrectNetwork())) return;
       setAddress(acc);
       const bal = await readBalance(acc);
       setBalance(bal);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to connect');
     }
-  }, []);
+  }, [ensureCorrectNetwork]);
 
   const disconnect = useCallback(() => {
     setAddress(null);
@@ -53,6 +66,7 @@ export function useWallet() {
         setError('Connect wallet first');
         return;
       }
+      if (!(await ensureCorrectNetwork())) return;
       const walletClient = getWalletClient();
       if (!walletClient) {
         setError('Wallet not available');
@@ -71,7 +85,7 @@ export function useWallet() {
         setError(e instanceof Error ? e.message : 'Transaction failed');
       }
     },
-    [address, getWalletClient]
+    [address, ensureCorrectNetwork, getWalletClient]
   );
 
   useEffect(() => {

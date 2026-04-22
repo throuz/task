@@ -50,7 +50,7 @@ export function BlockchainDemo() {
               type="text"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="Amount (wei)"
+              placeholder="Amount (token base units, usually 18 decimals)"
               style={{ display: 'block', marginBottom: '0.5rem', padding: '0.5rem', width: '100%', maxWidth: '400px' }}
             />
             <button
