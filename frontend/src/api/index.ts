@@ -4,5 +4,5 @@
 
 export { api, apiRequest, type RequestConfig } from './client';
 
-// When you have OpenAPI types/codegen, re-export here, e.g.:
-// export * from './generated';
+export { configureGeneratedApiClient } from './configure';
+export * from './generated';

@@ -25,9 +25,12 @@ npm run dev
 
 ## API
 
-- **Base URL**: Set `VITE_API_BASE_URL` in `.env` (e.g. `http://localhost:3000/api`). Must match your Swagger/Postman base URL.
+- **Base URL**: Set `VITE_API_BASE_URL` in `.env` (e.g. `https://api.larevela.com`). Must match your Swagger/Postman base URL.
 - **Auth**: If the API uses Bearer tokens, set `VITE_API_TOKEN`.
-- **Swagger**: Put your OpenAPI spec in `docs/` or use its URL; see `docs/SWAGGER.md` for codegen (e.g. openapi-typescript-codegen, orval).
+- **Swagger**: The OpenAPI spec is downloaded to `frontend/openapi.json`. Re-generate the type-safe client with:
+  ```bash
+  npm run gen:api
+  ```
 - **Postman**: Use the provided collection to test endpoints; keep request/response shape aligned with the app.
 
 ## Blockchain

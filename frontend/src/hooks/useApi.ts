@@ -1,59 +1,47 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '../api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  AuthService,
+  type ContactMessageCreate,
+  ContactMessagesService,
+  LookupsService,
+  type CreateDraftRequest,
+  type SaveDraftRequest,
+} from '../api';
 
-/**
- * Example hook for GET list – replace path and type with your Swagger endpoints.
- */
-export function useItemsList(params?: { page?: number; limit?: number }) {
+export function useLookupCollections() {
   return useQuery({
-    queryKey: ['items', params],
-    queryFn: () => api.get<{ data: unknown[] }>('/items', { params }),
+    queryKey: ['lookups', 'collections'],
+    queryFn: () => LookupsService.listLookupCollectionsApiV1LookupsGet(),
   });
 }
 
-/**
- * Example hook for GET by id.
- */
-export function useItem(id: string | null) {
+export function useLookup(lookupName: string | null) {
   return useQuery({
-    queryKey: ['items', id],
-    queryFn: () => api.get<unknown>(`/items/${id}`),
-    enabled: !!id,
+    queryKey: ['lookups', lookupName],
+    queryFn: () => LookupsService.getLookupApiV1LookupsLookupNameGet(lookupName as string),
+    enabled: !!lookupName,
   });
 }
 
-/**
- * Example hook for POST create – replace path and body type with your API.
- */
-export function useCreateItem() {
+export function useSubmitContactMessage() {
+  return useMutation({
+    mutationFn: (body: ContactMessageCreate) =>
+      ContactMessagesService.submitContactMessageApiV1ContactMessagesPost(body),
+  });
+}
+
+export function useCreateRegistrationDraft() {
+  return useMutation({
+    mutationFn: (body: CreateDraftRequest) => AuthService.createRegistrationDraftApiV1AuthRegisterDraftPost(body),
+  });
+}
+
+export function useSaveRegistrationDraft() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (body: Record<string, unknown>) => api.post<unknown>('/items', body),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['items'] }),
-  });
-}
-
-/**
- * Example hook for PUT/PATCH update.
- */
-export function useUpdateItem(id: string) {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (body: Record<string, unknown>) => api.patch<unknown>(`/items/${id}`, body),
+    mutationFn: (body: SaveDraftRequest) => AuthService.saveRegistrationDraftApiV1AuthRegisterDraftPut(body),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['items'] });
-      queryClient.invalidateQueries({ queryKey: ['items', id] });
+      queryClient.invalidateQueries({ queryKey: ['lookups'] });
     },
-  });
-}
-
-/**
- * Example hook for DELETE.
- */
-export function useDeleteItem() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: string) => api.delete(`/items/${id}`),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['items'] }),
   });
 }

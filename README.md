@@ -13,7 +13,7 @@ This repo contains the **task description** and a **React frontend** starter for
 ## Quick start
 
 1. Read [TASK.md](./TASK.md).
-2. Add your Swagger spec and/or Postman collection under `docs/` (or reference URLs in the task).
+2. Swagger/OpenAPI: this repo is configured to use LaRevela's public spec at `https://api.larevela.com/openapi.json` (downloaded into `frontend/openapi.json` for codegen). If you want to swap APIs, replace that file or update the URL and re-generate the client.
 3. Run the frontend:
 
    ```bash
@@ -21,6 +21,7 @@ This repo contains the **task description** and a **React frontend** starter for
    npm install
    cp .env.example .env
    # Edit .env (VITE_API_BASE_URL, VITE_CHAIN_ID, VITE_CONTRACT_ADDRESS)
+    npm run gen:api
    npm run dev
    ```
 
