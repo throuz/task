@@ -33,6 +33,21 @@ export function ApiDemo() {
   const [companyName, setCompanyName] = useState('');
   const [companyWebsite, setCompanyWebsite] = useState('');
 
+  const Success = ({ message }: { message: string }) => (
+    <div
+      style={{
+        marginTop: '0.5rem',
+        padding: '0.75rem',
+        borderRadius: 6,
+        background: '#ecfdf5',
+        border: '1px solid #bbf7d0',
+        color: '#065f46',
+      }}
+    >
+      <strong>Success:</strong> {message}
+    </div>
+  );
+
   return (
     <div>
       <h1>API Demo</h1>
@@ -81,6 +96,7 @@ export function ApiDemo() {
       <section style={{ marginTop: '1.25rem' }}>
         <h2>GET: /health</h2>
         {health.isLoading ? <Loading /> : null}
+        {health.isSuccess ? <Success message="API is reachable." /> : null}
         {health.data ? (
           <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
             {JSON.stringify(health.data, null, 2)}
@@ -128,9 +144,10 @@ export function ApiDemo() {
             {sendCode.isPending ? 'Sending…' : 'Send code'}
           </button>
         </div>
-        {sendCode.data ? (
+        {sendCode.isSuccess ? <Success message="Verification code sent. Check your email inbox." /> : null}
+        {sendCode.isSuccess ? (
           <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
-            {JSON.stringify(sendCode.data, null, 2)}
+            {JSON.stringify(sendCode.data ?? null, null, 2)}
           </pre>
         ) : null}
 
@@ -171,9 +188,10 @@ export function ApiDemo() {
             {verifyEmail.isPending ? 'Verifying…' : 'Verify'}
           </button>
         </div>
-        {verifyEmail.data ? (
+        {verifyEmail.isSuccess ? <Success message="Email verified. Token received." /> : null}
+        {verifyEmail.isSuccess ? (
           <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
-            {JSON.stringify(verifyEmail.data, null, 2)}
+            {JSON.stringify(verifyEmail.data ?? null, null, 2)}
           </pre>
         ) : null}
       </section>
@@ -221,9 +239,10 @@ export function ApiDemo() {
             {contact.isPending ? 'Sending…' : 'Send'}
           </button>
         </div>
-        {contact.data ? (
+        {contact.isSuccess ? <Success message="Contact message submitted." /> : null}
+        {contact.isSuccess ? (
           <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
-            {JSON.stringify(contact.data, null, 2)}
+            {JSON.stringify(contact.data ?? null, null, 2)}
           </pre>
         ) : null}
       </section>
@@ -256,9 +275,10 @@ export function ApiDemo() {
             {draftCreate.isPending ? 'Creating…' : 'Create draft'}
           </button>
         </div>
-        {draftCreate.data ? (
+        {draftCreate.isSuccess ? <Success message="Draft created." /> : null}
+        {draftCreate.isSuccess ? (
           <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
-            {JSON.stringify(draftCreate.data, null, 2)}
+            {JSON.stringify(draftCreate.data ?? null, null, 2)}
           </pre>
         ) : null}
       </section>
@@ -301,9 +321,10 @@ export function ApiDemo() {
             {draftSave.isPending ? 'Saving…' : 'Save draft'}
           </button>
         </div>
-        {draftSave.data ? (
+        {draftSave.isSuccess ? <Success message="Draft updated." /> : null}
+        {draftSave.isSuccess ? (
           <pre style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '6px', overflow: 'auto' }}>
-            {JSON.stringify(draftSave.data, null, 2)}
+            {JSON.stringify(draftSave.data ?? null, null, 2)}
           </pre>
         ) : null}
       </section>
