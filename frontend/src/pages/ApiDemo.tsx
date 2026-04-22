@@ -20,10 +20,6 @@ const preStyle: React.CSSProperties = {
   fontSize: 13,
 };
 
-function Success({ message }: { message: string }) {
-  return <SuccessMessage message={message} />;
-}
-
 export function ApiDemo() {
   const health = useHealthcheck();
 
@@ -71,7 +67,7 @@ export function ApiDemo() {
           />
         ) : null}
         {health.isLoading ? <Loading /> : null}
-        {health.isSuccess ? <Success message="API is reachable." /> : null}
+        {health.isSuccess ? <SuccessMessage message="API is reachable." /> : null}
         {health.data ? (
           <pre style={preStyle}>
             {JSON.stringify(health.data, null, 2)}
@@ -136,7 +132,7 @@ export function ApiDemo() {
             {sendCode.isPending ? 'Sending…' : 'Send code'}
           </button>
         </div>
-        {sendCode.isSuccess ? <Success message="Verification code sent. Check your email inbox." /> : null}
+        {sendCode.isSuccess ? <SuccessMessage message="Verification code sent. Check your email inbox." /> : null}
         {sendCode.isSuccess ? (
           <pre style={preStyle}>
             {JSON.stringify(sendCode.data ?? null, null, 2)}
@@ -196,7 +192,7 @@ export function ApiDemo() {
             {verifyEmail.isPending ? 'Verifying…' : 'Verify'}
           </button>
         </div>
-        {verifyEmail.isSuccess ? <Success message="Email verified. Token received." /> : null}
+        {verifyEmail.isSuccess ? <SuccessMessage message="Email verified. Token received." /> : null}
         {verifyEmail.isSuccess ? (
           <pre style={preStyle}>
             {JSON.stringify(verifyEmail.data ?? null, null, 2)}
@@ -256,7 +252,7 @@ export function ApiDemo() {
             {contact.isPending ? 'Sending…' : 'Send'}
           </button>
         </div>
-        {contact.isSuccess ? <Success message="Contact message submitted." /> : null}
+        {contact.isSuccess ? <SuccessMessage message="Contact message submitted." /> : null}
         {contact.isSuccess ? (
           <pre style={preStyle}>
             {JSON.stringify(contact.data ?? null, null, 2)}
@@ -299,7 +295,7 @@ export function ApiDemo() {
             {draftCreate.isPending ? 'Creating…' : 'Create draft'}
           </button>
         </div>
-        {draftCreate.isSuccess ? <Success message="Draft created." /> : null}
+        {draftCreate.isSuccess ? <SuccessMessage message="Draft created." /> : null}
         {draftCreate.isSuccess ? (
           <pre style={preStyle}>
             {JSON.stringify(draftCreate.data ?? null, null, 2)}
@@ -355,7 +351,7 @@ export function ApiDemo() {
             {draftSave.isPending ? 'Saving…' : 'Save draft'}
           </button>
         </div>
-        {draftSave.isSuccess ? <Success message="Draft updated." /> : null}
+        {draftSave.isSuccess ? <SuccessMessage message="Draft updated." /> : null}
         {draftSave.isSuccess ? (
           <pre style={preStyle}>
             {JSON.stringify(draftSave.data ?? null, null, 2)}
