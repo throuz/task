@@ -62,7 +62,7 @@ export function ApiDemo() {
   const [companyWebsite, setCompanyWebsite] = useState('');
 
   return (
-    <div>
+    <div style={{ maxWidth: 900, margin: '0 auto' }}>
       <h1>API Demo</h1>
       <p>
         Configure <code>VITE_API_BASE_URL</code> (e.g. <code>https://api.larevela.com</code>) and optionally{' '}
@@ -125,7 +125,14 @@ export function ApiDemo() {
         </p>
 
         <h3 style={{ marginBottom: '0.5rem' }}>1) POST /api/v1/auth/send-verification-code</h3>
-        <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, marginBottom: '0.75rem' }}>
+        <div
+          style={{
+            display: 'grid',
+            gap: '0.5rem',
+            maxWidth: 520,
+            margin: '0 auto 0.75rem',
+          }}
+        >
           <input
             type="email"
             value={signupEmail}
@@ -165,7 +172,14 @@ export function ApiDemo() {
         ) : null}
 
         <h3 style={{ marginBottom: '0.5rem' }}>2) POST /api/v1/auth/verify-email</h3>
-        <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, marginBottom: '0.75rem' }}>
+        <div
+          style={{
+            display: 'grid',
+            gap: '0.5rem',
+            maxWidth: 520,
+            margin: '0 auto 0.75rem',
+          }}
+        >
           <input
             type="text"
             value={verificationId}
@@ -211,7 +225,7 @@ export function ApiDemo() {
 
       <section style={{ marginTop: '1.25rem' }}>
         <h2>POST (create): /api/v1/contact-messages</h2>
-        <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520 }}>
+        <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
             type="text"
             value={contactName}
@@ -265,7 +279,7 @@ export function ApiDemo() {
         <p style={{ marginTop: 0 }}>
           This creates a registration draft. You need a <code>verification_token</code> from the email verification step.
         </p>
-        <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520 }}>
+        <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
             type="text"
             value={verificationToken}
@@ -298,7 +312,7 @@ export function ApiDemo() {
 
       <section style={{ marginTop: '1.25rem' }}>
         <h2>PUT (update): /api/v1/auth/register/draft</h2>
-        <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520 }}>
+        <div style={{ display: 'grid', gap: '0.5rem', maxWidth: 520, margin: '0 auto' }}>
           <input
             type="text"
             value={draftId}

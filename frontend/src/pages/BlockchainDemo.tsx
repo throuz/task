@@ -18,7 +18,7 @@ export function BlockchainDemo() {
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: 900, margin: '0 auto' }}>
       <h1>Blockchain Demo</h1>
       <p>Connect a Web3 wallet (e.g. MetaMask). Set <code>VITE_CHAIN_ID</code> and <code>VITE_CONTRACT_ADDRESS</code> in .env.</p>
 
@@ -44,14 +44,26 @@ export function BlockchainDemo() {
               value={toAddress}
               onChange={(e) => setToAddress(e.target.value)}
               placeholder="To address (0x…)"
-              style={{ display: 'block', marginBottom: '0.5rem', padding: '0.5rem', width: '100%', maxWidth: '400px' }}
+              style={{
+                display: 'block',
+                margin: '0 auto 0.5rem',
+                padding: '0.5rem',
+                width: '100%',
+                maxWidth: '400px',
+              }}
             />
             <input
               type="text"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="Amount (token base units, usually 18 decimals)"
-              style={{ display: 'block', marginBottom: '0.5rem', padding: '0.5rem', width: '100%', maxWidth: '400px' }}
+              style={{
+                display: 'block',
+                margin: '0 auto 0.5rem',
+                padding: '0.5rem',
+                width: '100%',
+                maxWidth: '400px',
+              }}
             />
             <button
               type="button"
