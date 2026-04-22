@@ -20,6 +20,7 @@ src/
 npm install
 cp .env.example .env
 # Edit .env: VITE_API_BASE_URL, VITE_CHAIN_ID, VITE_CONTRACT_ADDRESS
+npm run gen:api
 npm run dev
 ```
 
@@ -53,6 +54,13 @@ Some endpoints (for example `GET /api/v1/lookups`) may return `401 Unauthorized`
 - **Config**: `VITE_CHAIN_ID` (e.g. `1` for mainnet, `11155111` for Sepolia), `VITE_CONTRACT_ADDRESS` (your contract).
 - **Read**: Example `balanceOf` in `blockchain/contract.ts` – replace ABI with your contract.
 - **Write**: Example `transfer` – same; show tx status in UI (pending/success/error).
+
+### Default demo chain / contract
+
+By default `.env.example` is configured for:
+
+- **Chain**: Sepolia (chainId `11155111`)
+- **Contract**: an ERC20 token contract at `0x65e37b558f64e2be5768db46df22f93d85741a9e` (used to demo `balanceOf` + `transfer`)
 
 ## Scripts
 

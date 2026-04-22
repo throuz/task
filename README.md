@@ -21,7 +21,7 @@ This repo contains the **task description** and a **React frontend** starter for
    npm install
    cp .env.example .env
    # Edit .env (VITE_API_BASE_URL, VITE_CHAIN_ID, VITE_CONTRACT_ADDRESS)
-    npm run gen:api
+   npm run gen:api
    npm run dev
    ```
 
