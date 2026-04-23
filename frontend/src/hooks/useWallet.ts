@@ -207,20 +207,20 @@ export function useWallet() {
   );
 
   useEffect(() => {
-    if (!address) return;
-    refreshBalances(address);
-  }, [address]);
-
-  useEffect(() => {
     if (!window.ethereum) return;
     const onAccountsChanged = (accounts: unknown) => {
       const acc = (accounts as Address[])?.[0];
       setAddress(acc ?? null);
-      if (!acc) setBalance(null);
+      if (!acc) {
+        setNativeBalanceWei(null);
+        setBalance(null);
+        return;
+      }
+      refreshBalances(acc).catch(() => {});
     };
     window.ethereum.on?.('accountsChanged', onAccountsChanged);
     return () => window.ethereum?.removeListener?.('accountsChanged', onAccountsChanged);
-  }, []);
+  }, [refreshBalances]);
 
   useEffect(() => {
     const provider = window.ethereum;
