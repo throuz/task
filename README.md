@@ -9,6 +9,7 @@ This repo contains the **task description** and a **React frontend** starter for
 | [TASK.md](./TASK.md) | Full task: API integration (Swagger/Postman) + blockchain smart contract |
 | **frontend/** | React + TypeScript app with API client and Web3 (viem) integration |
 | **docs/** | Placeholder for Swagger/OpenAPI spec and notes (see [docs/SWAGGER.md](./docs/SWAGGER.md)) |
+| [NOTES.md](./NOTES.md) | Short notes: design decisions + improvements |
 
 ## Quick start
 
