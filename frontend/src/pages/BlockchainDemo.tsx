@@ -14,9 +14,17 @@ function txExplorerUrl(hash: string) {
   return null;
 }
 
+function formatEthFromWei(wei: bigint) {
+  const s = wei.toString().padStart(19, '0');
+  const whole = s.slice(0, -18);
+  const frac = s.slice(-18).replace(/0+$/, '');
+  return frac ? `${whole}.${frac.slice(0, 6)}` : whole;
+}
+
 export function BlockchainDemo() {
   const {
     address,
+    nativeBalanceWei,
     balance,
     wrapTxStatus,
     wrapTxHash,
@@ -66,6 +74,10 @@ export function BlockchainDemo() {
             <button type="button" onClick={disconnect} style={{ marginLeft: '1rem' }}>
               Disconnect
             </button>
+          </p>
+          <p>
+            <strong>Sepolia ETH (native):</strong>{' '}
+            {nativeBalanceWei != null ? `${formatEthFromWei(nativeBalanceWei)} ETH` : '—'}
           </p>
           <p><strong>Contract balance (read):</strong> {balance != null ? balance.toString() : '—'}</p>
 

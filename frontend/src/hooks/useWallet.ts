@@ -9,6 +9,7 @@ export type TxStatus = 'idle' | 'pending' | 'success' | 'error';
 
 export function useWallet() {
   const [address, setAddress] = useState<Address | null>(null);
+  const [nativeBalanceWei, setNativeBalanceWei] = useState<bigint | null>(null);
   const [balance, setBalance] = useState<bigint | null>(null);
   const [wrapTxStatus, setWrapTxStatus] = useState<TxStatus>('idle');
   const [wrapTxHash, setWrapTxHash] = useState<`0x${string}` | null>(null);
@@ -93,6 +94,8 @@ export function useWallet() {
         if (!(await ensureCorrectNetwork())) return;
       }
       setAddress(acc);
+      const nativeBal = await publicClient.getBalance({ address: acc });
+      setNativeBalanceWei(nativeBal);
       const bal = await readBalance(acc);
       setBalance(bal);
     } catch (e) {
@@ -102,6 +105,7 @@ export function useWallet() {
 
   const disconnect = useCallback(() => {
     setAddress(null);
+    setNativeBalanceWei(null);
     setBalance(null);
     setWalletError(null);
     setWrapTxStatus('idle');
@@ -139,6 +143,8 @@ export function useWallet() {
         setTransferTxHash(hash);
         await publicClient.waitForTransactionReceipt({ hash });
         setTransferTxStatus('success');
+        const nativeBal = await publicClient.getBalance({ address });
+        setNativeBalanceWei(nativeBal);
         const newBalance = await readBalance(address);
         setBalance(newBalance);
         return hash;
@@ -181,6 +187,8 @@ export function useWallet() {
         setWrapTxHash(hash);
         await publicClient.waitForTransactionReceipt({ hash });
         setWrapTxStatus('success');
+        const nativeBal = await publicClient.getBalance({ address });
+        setNativeBalanceWei(nativeBal);
         const newBalance = await readBalance(address);
         setBalance(newBalance);
         return hash;
@@ -195,6 +203,7 @@ export function useWallet() {
   useEffect(() => {
     if (!address) return;
     readBalance(address).then(setBalance);
+    publicClient.getBalance({ address }).then(setNativeBalanceWei);
   }, [address]);
 
   useEffect(() => {
@@ -210,6 +219,7 @@ export function useWallet() {
 
   return {
     address,
+    nativeBalanceWei,
     balance,
     wrapTxStatus,
     wrapTxHash,
