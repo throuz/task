@@ -52,15 +52,15 @@ Some endpoints (for example `GET /api/v1/lookups`) may return `401 Unauthorized`
 
 - **Wallet**: Connect via MetaMask (or other injected provider). Chain and contract are read from env.
 - **Config**: `VITE_CHAIN_ID` (e.g. `1` for mainnet, `11155111` for Sepolia), `VITE_CONTRACT_ADDRESS` (your contract).
-- **Read**: Example `balanceOf` in `blockchain/contract.ts` – replace ABI with your contract.
-- **Write**: Example `transfer` – same; show tx status in UI (pending/success/error).
+- **Read**: Native ETH (`getBalance`) + token `balanceOf` are displayed in the UI.
+- **Write**: WETH-style `deposit()` (wrap ETH) and `transfer()`; shows tx status (pending/success/error) and explorer links.
 
 ### Default demo chain / contract
 
 By default `.env.example` is configured for:
 
 - **Chain**: Sepolia (chainId `11155111`)
-- **Contract**: an ERC20 token contract at `0x65e37b558f64e2be5768db46df22f93d85741a9e` (used to demo `balanceOf` + `transfer`)
+- **Contract**: Sepolia WETH at `0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9` (used to demo `deposit` + `balanceOf` + `transfer`)
 
 ## Scripts
 

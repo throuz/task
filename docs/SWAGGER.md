@@ -6,6 +6,8 @@
    - **orval**: add orval config and run `npx orval` to generate client and React Query hooks from OpenAPI.
 3. Replace the manual `src/api/client.ts` and `src/types/api.ts` with the generated code, and point your hooks in `src/hooks/useApi.ts` to the generated functions.
 
+Note: in this repo the OpenAPI spec is currently downloaded to `frontend/openapi.json` and generated into `frontend/src/api/generated/` via `npm run gen:api`.
+
 ## Postman
 
 - Import the provided Postman collection to verify endpoints (base URL, headers, body) before implementing.
