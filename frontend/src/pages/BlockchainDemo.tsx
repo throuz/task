@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useWallet } from '../hooks/useWallet';
 import { ErrorMessage, Loading, SuccessMessage } from '../components';
-import { CHAIN_ID } from '../blockchain';
+import { CHAIN_ID, CONTRACT_ADDRESS } from '../blockchain';
 
 function truncateAddress(addr: string) {
   if (!addr || addr.length < 10) return addr;
@@ -79,7 +79,13 @@ export function BlockchainDemo() {
             <strong>Sepolia ETH (native):</strong>{' '}
             {nativeBalanceWei != null ? `${formatEthFromWei(nativeBalanceWei)} ETH` : '—'}
           </p>
-          <p><strong>Contract balance (read):</strong> {balance != null ? balance.toString() : '—'}</p>
+          <p>
+            <strong>WETH token balance (balanceOf):</strong> {balance != null ? balance.toString() : '—'}
+          </p>
+          <p style={{ marginTop: 0 }}>
+            <strong>Chain ID:</strong> {CHAIN_ID} <strong style={{ marginLeft: '0.75rem' }}>Contract:</strong>{' '}
+            <code>{CONTRACT_ADDRESS}</code>
+          </p>
 
           <div style={{ marginTop: '1rem' }}>
             <h2 style={{ marginBottom: '0.5rem' }}>Write: Wrap Sepolia ETH into WETH (deposit)</h2>
