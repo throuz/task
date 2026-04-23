@@ -3,5 +3,6 @@ export {
   publicClient,
   ERC20_ABI,
   readBalance,
+  writeDeposit,
   writeTransfer,
 } from './contract';

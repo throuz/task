@@ -22,6 +22,13 @@ export const ERC20_ABI = [
     outputs: [{ type: 'uint256' }],
   },
   {
+    name: 'deposit',
+    type: 'function',
+    stateMutability: 'payable',
+    inputs: [],
+    outputs: [],
+  },
+  {
     name: 'transfer',
     type: 'function',
     stateMutability: 'nonpayable',
@@ -57,5 +64,21 @@ export async function writeTransfer(
     args: [to, amount],
     account,
     chain,
+  });
+}
+
+export async function writeDeposit(
+  walletClient: ReturnType<typeof createWalletClient>,
+  account: Address,
+  amountWei: bigint
+) {
+  if (!CONTRACT_ADDRESS) throw new Error('Contract address not set');
+  return walletClient.writeContract({
+    address: CONTRACT_ADDRESS,
+    abi: ERC20_ABI,
+    functionName: 'deposit',
+    account,
+    chain,
+    value: amountWei,
   });
 }

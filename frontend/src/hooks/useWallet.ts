@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { createWalletClient, custom, type Address } from 'viem';
 import { mainnet, sepolia } from 'viem/chains';
-import { CHAIN_ID, publicClient, readBalance, writeTransfer } from '../blockchain';
+import { CHAIN_ID, publicClient, readBalance, writeDeposit, writeTransfer } from '../blockchain';
 
 const chain = CHAIN_ID === 1 ? mainnet : sepolia;
 
@@ -142,6 +142,48 @@ export function useWallet() {
     [address, ensureCorrectNetwork, getWalletClient, switchToSupportedNetwork]
   );
 
+  const deposit = useCallback(
+    async (amountWei: bigint) => {
+      if (!address) {
+        setError('Connect wallet first');
+        return;
+      }
+      if (amountWei <= 0n) {
+        setError('Amount must be greater than 0');
+        return;
+      }
+      if (!(await ensureCorrectNetwork())) {
+        try {
+          await switchToSupportedNetwork();
+        } catch {
+          // ignore; user can switch manually
+        }
+        if (!(await ensureCorrectNetwork())) return;
+      }
+      const walletClient = getWalletClient();
+      if (!walletClient) {
+        setError('Wallet not available');
+        return;
+      }
+      setTxStatus('pending');
+      setError(null);
+      setTxHash(null);
+      try {
+        const hash = await writeDeposit(walletClient, address, amountWei);
+        setTxHash(hash);
+        await publicClient.waitForTransactionReceipt({ hash });
+        setTxStatus('success');
+        const newBalance = await readBalance(address);
+        setBalance(newBalance);
+        return hash;
+      } catch (e) {
+        setTxStatus('error');
+        setError(e instanceof Error ? e.message : 'Transaction failed');
+      }
+    },
+    [address, ensureCorrectNetwork, getWalletClient, switchToSupportedNetwork]
+  );
+
   useEffect(() => {
     if (!address) return;
     readBalance(address).then(setBalance);
@@ -166,6 +208,7 @@ export function useWallet() {
     error,
     connect,
     disconnect,
+    deposit,
     transfer,
     isConnected: !!address,
   };

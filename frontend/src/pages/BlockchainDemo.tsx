@@ -15,19 +15,28 @@ function txExplorerUrl(hash: string) {
 }
 
 export function BlockchainDemo() {
-  const { address, balance, txStatus, txHash, error, connect, disconnect, transfer, isConnected } = useWallet();
+  const { address, balance, txStatus, txHash, error, connect, disconnect, deposit, transfer, isConnected } = useWallet();
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useState('');
+  const [wrapAmount, setWrapAmount] = useState('');
 
   const handleTransfer = () => {
     if (!toAddress || !amount) return;
     transfer(toAddress as `0x${string}`, BigInt(amount));
   };
 
+  const handleWrap = () => {
+    if (!wrapAmount) return;
+    deposit(BigInt(wrapAmount));
+  };
+
   return (
     <div style={{ maxWidth: 900, margin: '0 auto' }}>
       <h1>Blockchain Demo</h1>
-      <p>Connect a Web3 wallet (e.g. MetaMask). Set <code>VITE_CHAIN_ID</code> and <code>VITE_CONTRACT_ADDRESS</code> in .env.</p>
+      <p>
+        Connect a Web3 wallet (e.g. MetaMask). This demo uses WETH-style contract methods:
+        <code>deposit()</code> (wrap ETH) and <code>transfer()</code>.
+      </p>
 
       {error && <ErrorMessage message={error} />}
 
@@ -46,6 +55,42 @@ export function BlockchainDemo() {
           <p><strong>Contract balance (read):</strong> {balance != null ? balance.toString() : '—'}</p>
 
           <div style={{ marginTop: '1rem' }}>
+            <h2 style={{ marginBottom: '0.5rem' }}>Write: Wrap Sepolia ETH into WETH (deposit)</h2>
+            <input
+              type="text"
+              value={wrapAmount}
+              onChange={(e) => setWrapAmount(e.target.value)}
+              placeholder="Amount (wei)"
+              style={{
+                display: 'block',
+                margin: '0 auto 0.5rem',
+                padding: '0.5rem',
+                width: '100%',
+                maxWidth: '400px',
+              }}
+            />
+            <button type="button" onClick={handleWrap} disabled={txStatus === 'pending' || !wrapAmount}>
+              {txStatus === 'pending' ? 'Pending…' : 'Wrap (deposit)'}
+            </button>
+            {txStatus === 'pending' ? <Loading /> : null}
+            {txStatus === 'success' ? <SuccessMessage message="Transaction confirmed." /> : null}
+            {txStatus === 'error' ? <ErrorMessage message="Transaction failed." /> : null}
+            {txHash ? (
+              <p style={{ marginTop: '0.5rem' }}>
+                <strong>Tx:</strong>{' '}
+                {txExplorerUrl(txHash) ? (
+                  <a href={txExplorerUrl(txHash) as string} target="_blank" rel="noreferrer">
+                    {truncateAddress(txHash)}
+                  </a>
+                ) : (
+                  truncateAddress(txHash)
+                )}
+              </p>
+            ) : null}
+
+            <hr style={{ margin: '1.25rem 0' }} />
+
+            <h2 style={{ marginBottom: '0.5rem' }}>Write: Transfer WETH</h2>
             <input
               type="text"
               value={toAddress}
