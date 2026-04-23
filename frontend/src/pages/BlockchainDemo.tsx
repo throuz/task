@@ -15,7 +15,22 @@ function txExplorerUrl(hash: string) {
 }
 
 export function BlockchainDemo() {
-  const { address, balance, txStatus, txHash, error, connect, disconnect, deposit, transfer, isConnected } = useWallet();
+  const {
+    address,
+    balance,
+    wrapTxStatus,
+    wrapTxHash,
+    wrapError,
+    transferTxStatus,
+    transferTxHash,
+    transferError,
+    walletError,
+    connect,
+    disconnect,
+    deposit,
+    transfer,
+    isConnected,
+  } = useWallet();
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useState('');
   const [wrapAmount, setWrapAmount] = useState('');
@@ -38,7 +53,7 @@ export function BlockchainDemo() {
         <code>deposit()</code> (wrap ETH) and <code>transfer()</code>.
       </p>
 
-      {error && <ErrorMessage message={error} />}
+      {walletError ? <ErrorMessage message={walletError} /> : null}
 
       {!isConnected ? (
         <button type="button" onClick={connect}>
@@ -69,21 +84,21 @@ export function BlockchainDemo() {
                 maxWidth: '400px',
               }}
             />
-            <button type="button" onClick={handleWrap} disabled={txStatus === 'pending' || !wrapAmount}>
-              {txStatus === 'pending' ? 'Pending…' : 'Wrap (deposit)'}
+            <button type="button" onClick={handleWrap} disabled={wrapTxStatus === 'pending' || !wrapAmount}>
+              {wrapTxStatus === 'pending' ? 'Pending…' : 'Wrap (deposit)'}
             </button>
-            {txStatus === 'pending' ? <Loading /> : null}
-            {txStatus === 'success' ? <SuccessMessage message="Transaction confirmed." /> : null}
-            {txStatus === 'error' ? <ErrorMessage message="Transaction failed." /> : null}
-            {txHash ? (
+            {wrapTxStatus === 'pending' ? <Loading /> : null}
+            {wrapError ? <ErrorMessage message={wrapError} /> : null}
+            {wrapTxStatus === 'success' ? <SuccessMessage message="Wrap confirmed." /> : null}
+            {wrapTxHash ? (
               <p style={{ marginTop: '0.5rem' }}>
                 <strong>Tx:</strong>{' '}
-                {txExplorerUrl(txHash) ? (
-                  <a href={txExplorerUrl(txHash) as string} target="_blank" rel="noreferrer">
-                    {truncateAddress(txHash)}
+                {txExplorerUrl(wrapTxHash) ? (
+                  <a href={txExplorerUrl(wrapTxHash) as string} target="_blank" rel="noreferrer">
+                    {truncateAddress(wrapTxHash)}
                   </a>
                 ) : (
-                  truncateAddress(txHash)
+                  truncateAddress(wrapTxHash)
                 )}
               </p>
             ) : null}
@@ -120,22 +135,22 @@ export function BlockchainDemo() {
             <button
               type="button"
               onClick={handleTransfer}
-              disabled={txStatus === 'pending' || !toAddress || !amount}
+              disabled={transferTxStatus === 'pending' || !toAddress || !amount}
             >
-              {txStatus === 'pending' ? 'Pending…' : 'Transfer'}
+              {transferTxStatus === 'pending' ? 'Pending…' : 'Transfer'}
             </button>
-            {txStatus === 'pending' ? <Loading /> : null}
-            {txStatus === 'success' ? <SuccessMessage message="Transaction confirmed." /> : null}
-            {txStatus === 'error' ? <ErrorMessage message="Transaction failed." /> : null}
-            {txHash ? (
+            {transferTxStatus === 'pending' ? <Loading /> : null}
+            {transferError ? <ErrorMessage message={transferError} /> : null}
+            {transferTxStatus === 'success' ? <SuccessMessage message="Transfer confirmed." /> : null}
+            {transferTxHash ? (
               <p style={{ marginTop: '0.5rem' }}>
                 <strong>Tx:</strong>{' '}
-                {txExplorerUrl(txHash) ? (
-                  <a href={txExplorerUrl(txHash) as string} target="_blank" rel="noreferrer">
-                    {truncateAddress(txHash)}
+                {txExplorerUrl(transferTxHash) ? (
+                  <a href={txExplorerUrl(transferTxHash) as string} target="_blank" rel="noreferrer">
+                    {truncateAddress(transferTxHash)}
                   </a>
                 ) : (
-                  truncateAddress(txHash)
+                  truncateAddress(transferTxHash)
                 )}
               </p>
             ) : null}

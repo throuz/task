@@ -10,9 +10,13 @@ export type TxStatus = 'idle' | 'pending' | 'success' | 'error';
 export function useWallet() {
   const [address, setAddress] = useState<Address | null>(null);
   const [balance, setBalance] = useState<bigint | null>(null);
-  const [txStatus, setTxStatus] = useState<TxStatus>('idle');
-  const [txHash, setTxHash] = useState<`0x${string}` | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [wrapTxStatus, setWrapTxStatus] = useState<TxStatus>('idle');
+  const [wrapTxHash, setWrapTxHash] = useState<`0x${string}` | null>(null);
+  const [wrapError, setWrapError] = useState<string | null>(null);
+  const [transferTxStatus, setTransferTxStatus] = useState<TxStatus>('idle');
+  const [transferTxHash, setTransferTxHash] = useState<`0x${string}` | null>(null);
+  const [transferError, setTransferError] = useState<string | null>(null);
+  const [walletError, setWalletError] = useState<string | null>(null);
 
   const switchToSupportedNetwork = useCallback(async () => {
     const provider = window.ethereum;
@@ -64,18 +68,18 @@ export function useWallet() {
     const chainIdHex = (await provider.request({ method: 'eth_chainId' })) as string;
     const current = Number.parseInt(chainIdHex, 16);
     if (current !== CHAIN_ID) {
-      setError(`Wrong network. Please switch your wallet to chainId ${CHAIN_ID}.`);
+      setWalletError(`Wrong network. Please switch your wallet to chainId ${CHAIN_ID}.`);
       return false;
     }
     return true;
   }, []);
 
   const connect = useCallback(async () => {
-    setError(null);
+    setWalletError(null);
     try {
       const provider = window.ethereum;
       if (!provider) {
-        setError('No wallet found. Install MetaMask or another Web3 wallet.');
+        setWalletError('No wallet found. Install MetaMask or another Web3 wallet.');
         return;
       }
       const [acc] = (await provider.request({ method: 'eth_requestAccounts' })) as Address[];
@@ -92,24 +96,29 @@ export function useWallet() {
       const bal = await readBalance(acc);
       setBalance(bal);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to connect');
+      setWalletError(e instanceof Error ? e.message : 'Failed to connect');
     }
   }, [ensureCorrectNetwork, switchToSupportedNetwork]);
 
   const disconnect = useCallback(() => {
     setAddress(null);
     setBalance(null);
-    setError(null);
-    setTxStatus('idle');
-    setTxHash(null);
+    setWalletError(null);
+    setWrapTxStatus('idle');
+    setWrapTxHash(null);
+    setWrapError(null);
+    setTransferTxStatus('idle');
+    setTransferTxHash(null);
+    setTransferError(null);
   }, []);
 
   const transfer = useCallback(
     async (to: Address, amount: bigint) => {
       if (!address) {
-        setError('Connect wallet first');
+        setTransferError('Connect wallet first');
         return;
       }
+      setTransferError(null);
       if (!(await ensureCorrectNetwork())) {
         try {
           await switchToSupportedNetwork();
@@ -120,23 +129,22 @@ export function useWallet() {
       }
       const walletClient = getWalletClient();
       if (!walletClient) {
-        setError('Wallet not available');
+        setTransferError('Wallet not available');
         return;
       }
-      setTxStatus('pending');
-      setError(null);
-      setTxHash(null);
+      setTransferTxStatus('pending');
+      setTransferTxHash(null);
       try {
         const hash = await writeTransfer(walletClient, address, to, amount);
-        setTxHash(hash);
+        setTransferTxHash(hash);
         await publicClient.waitForTransactionReceipt({ hash });
-        setTxStatus('success');
+        setTransferTxStatus('success');
         const newBalance = await readBalance(address);
         setBalance(newBalance);
         return hash;
       } catch (e) {
-        setTxStatus('error');
-        setError(e instanceof Error ? e.message : 'Transaction failed');
+        setTransferTxStatus('error');
+        setTransferError(e instanceof Error ? e.message : 'Transaction failed');
       }
     },
     [address, ensureCorrectNetwork, getWalletClient, switchToSupportedNetwork]
@@ -145,13 +153,14 @@ export function useWallet() {
   const deposit = useCallback(
     async (amountWei: bigint) => {
       if (!address) {
-        setError('Connect wallet first');
+        setWrapError('Connect wallet first');
         return;
       }
       if (amountWei <= 0n) {
-        setError('Amount must be greater than 0');
+        setWrapError('Amount must be greater than 0');
         return;
       }
+      setWrapError(null);
       if (!(await ensureCorrectNetwork())) {
         try {
           await switchToSupportedNetwork();
@@ -162,23 +171,22 @@ export function useWallet() {
       }
       const walletClient = getWalletClient();
       if (!walletClient) {
-        setError('Wallet not available');
+        setWrapError('Wallet not available');
         return;
       }
-      setTxStatus('pending');
-      setError(null);
-      setTxHash(null);
+      setWrapTxStatus('pending');
+      setWrapTxHash(null);
       try {
         const hash = await writeDeposit(walletClient, address, amountWei);
-        setTxHash(hash);
+        setWrapTxHash(hash);
         await publicClient.waitForTransactionReceipt({ hash });
-        setTxStatus('success');
+        setWrapTxStatus('success');
         const newBalance = await readBalance(address);
         setBalance(newBalance);
         return hash;
       } catch (e) {
-        setTxStatus('error');
-        setError(e instanceof Error ? e.message : 'Transaction failed');
+        setWrapTxStatus('error');
+        setWrapError(e instanceof Error ? e.message : 'Transaction failed');
       }
     },
     [address, ensureCorrectNetwork, getWalletClient, switchToSupportedNetwork]
@@ -203,9 +211,13 @@ export function useWallet() {
   return {
     address,
     balance,
-    txStatus,
-    txHash,
-    error,
+    wrapTxStatus,
+    wrapTxHash,
+    wrapError,
+    transferTxStatus,
+    transferTxHash,
+    transferError,
+    walletError,
     connect,
     disconnect,
     deposit,
