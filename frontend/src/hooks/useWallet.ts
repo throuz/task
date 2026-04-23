@@ -75,6 +75,15 @@ export function useWallet() {
     return true;
   }, []);
 
+  const refreshBalances = useCallback(async (addr: Address) => {
+    const [nativeBal, tokenBal] = await Promise.all([
+      publicClient.getBalance({ address: addr }),
+      readBalance(addr),
+    ]);
+    setNativeBalanceWei(nativeBal);
+    setBalance(tokenBal);
+  }, []);
+
   const connect = useCallback(async () => {
     setWalletError(null);
     try {
@@ -94,14 +103,11 @@ export function useWallet() {
         if (!(await ensureCorrectNetwork())) return;
       }
       setAddress(acc);
-      const nativeBal = await publicClient.getBalance({ address: acc });
-      setNativeBalanceWei(nativeBal);
-      const bal = await readBalance(acc);
-      setBalance(bal);
+      await refreshBalances(acc);
     } catch (e) {
       setWalletError(e instanceof Error ? e.message : 'Failed to connect');
     }
-  }, [ensureCorrectNetwork, switchToSupportedNetwork]);
+  }, [ensureCorrectNetwork, refreshBalances, switchToSupportedNetwork]);
 
   const disconnect = useCallback(() => {
     setAddress(null);
@@ -202,8 +208,7 @@ export function useWallet() {
 
   useEffect(() => {
     if (!address) return;
-    readBalance(address).then(setBalance);
-    publicClient.getBalance({ address }).then(setNativeBalanceWei);
+    refreshBalances(address);
   }, [address]);
 
   useEffect(() => {
@@ -216,6 +221,24 @@ export function useWallet() {
     window.ethereum.on?.('accountsChanged', onAccountsChanged);
     return () => window.ethereum?.removeListener?.('accountsChanged', onAccountsChanged);
   }, []);
+
+  useEffect(() => {
+    const provider = window.ethereum;
+    if (!provider) return;
+
+    // Silent reconnect: if user already approved accounts, load them without prompting.
+    provider
+      .request({ method: 'eth_accounts' })
+      .then(async (accounts) => {
+        const acc = (accounts as Address[])?.[0];
+        if (!acc) return;
+        // If we're on the wrong network, still set the address, but surface the warning.
+        await ensureCorrectNetwork().catch(() => {});
+        setAddress(acc);
+        await refreshBalances(acc);
+      })
+      .catch(() => {});
+  }, [ensureCorrectNetwork, refreshBalances]);
 
   return {
     address,
