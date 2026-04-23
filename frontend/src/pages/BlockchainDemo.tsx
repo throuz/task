@@ -57,8 +57,11 @@ export function BlockchainDemo() {
     <div style={{ maxWidth: 900, margin: '0 auto' }}>
       <h1>Blockchain Demo</h1>
       <p>
-        Connect a Web3 wallet (e.g. MetaMask). This demo uses WETH-style contract methods:
-        <code>deposit()</code> (wrap ETH) and <code>transfer()</code>.
+        This page demonstrates smart contract integration on Sepolia using a WETH-style ERC20 contract.
+      </p>
+      <p style={{ marginTop: 0 }}>
+        Flow: <strong>Wrap</strong> Sepolia ETH into WETH via <code>deposit()</code>, then <strong>transfer</strong> WETH
+        via <code>transfer(to, amount)</code>. You can verify each transaction via the Etherscan link.
       </p>
 
       {walletError ? <ErrorMessage message={walletError} /> : null}
@@ -69,26 +72,43 @@ export function BlockchainDemo() {
         </button>
       ) : (
         <>
-          <p>
-            <strong>Address:</strong> {truncateAddress(address ?? '')}
-            <button type="button" onClick={disconnect} style={{ marginLeft: '1rem' }}>
-              Disconnect
-            </button>
-          </p>
-          <p>
-            <strong>Sepolia ETH (native):</strong>{' '}
-            {nativeBalanceWei != null ? `${formatEthFromWei(nativeBalanceWei)} ETH` : '—'}
-          </p>
-          <p>
-            <strong>WETH token balance (balanceOf):</strong> {balance != null ? balance.toString() : '—'}
-          </p>
-          <p style={{ marginTop: 0 }}>
-            <strong>Chain ID:</strong> {CHAIN_ID} <strong style={{ marginLeft: '0.75rem' }}>Contract:</strong>{' '}
-            <code>{CONTRACT_ADDRESS}</code>
-          </p>
+          <section style={{ marginTop: '1.25rem' }}>
+            <h2>1) Network & Contract</h2>
+            <p style={{ marginTop: 0 }}>
+              <strong>Chain ID:</strong> {CHAIN_ID}
+              <strong style={{ marginLeft: '0.75rem' }}>Contract:</strong> <code>{CONTRACT_ADDRESS}</code>
+            </p>
+          </section>
 
-          <div style={{ marginTop: '1rem' }}>
-            <h2 style={{ marginBottom: '0.5rem' }}>Write: Wrap Sepolia ETH into WETH (deposit)</h2>
+          <section style={{ marginTop: '1.25rem' }}>
+            <h2>2) Wallet</h2>
+            <p style={{ marginTop: 0 }}>
+              <strong>Address:</strong> {truncateAddress(address ?? '')}
+              <button type="button" onClick={disconnect} style={{ marginLeft: '1rem' }}>
+                Disconnect
+              </button>
+            </p>
+            <p style={{ marginTop: 0 }}>
+              <strong>Sepolia ETH (native):</strong>{' '}
+              {nativeBalanceWei != null ? `${formatEthFromWei(nativeBalanceWei)} ETH` : '—'}
+            </p>
+          </section>
+
+          <section style={{ marginTop: '1.25rem' }}>
+            <h2>3) Read from contract</h2>
+            <p style={{ marginTop: 0 }}>
+              Reads <code>balanceOf(address)</code> from the WETH contract and displays your WETH balance (base units).
+            </p>
+            <p style={{ marginTop: 0 }}>
+              <strong>WETH token balance (balanceOf):</strong> {balance != null ? balance.toString() : '—'}
+            </p>
+          </section>
+
+          <section style={{ marginTop: '1.25rem' }}>
+            <h2>4) Write to contract — Wrap (deposit)</h2>
+            <p style={{ marginTop: 0 }}>
+              Calls <code>deposit()</code> and sends ETH as <code>value</code>. Input unit is <strong>wei</strong>.
+            </p>
             <input
               type="text"
               value={wrapAmount}
@@ -110,7 +130,7 @@ export function BlockchainDemo() {
             {wrapTxStatus === 'success' ? <SuccessMessage message="Wrap confirmed." /> : null}
             {wrapTxHash ? (
               <p style={{ marginTop: '0.5rem' }}>
-                <strong>Tx:</strong>{' '}
+                <strong>Wrap tx:</strong>{' '}
                 {txExplorerUrl(wrapTxHash) ? (
                   <a href={txExplorerUrl(wrapTxHash) as string} target="_blank" rel="noreferrer">
                     {truncateAddress(wrapTxHash)}
@@ -120,10 +140,13 @@ export function BlockchainDemo() {
                 )}
               </p>
             ) : null}
+          </section>
 
-            <hr style={{ margin: '1.25rem 0' }} />
-
-            <h2 style={{ marginBottom: '0.5rem' }}>Write: Transfer WETH</h2>
+          <section style={{ marginTop: '1.25rem' }}>
+            <h2>5) Write to contract — Transfer WETH</h2>
+            <p style={{ marginTop: 0 }}>
+              Calls <code>transfer(to, amount)</code>. Input unit is WETH <strong>base units</strong> (18 decimals).
+            </p>
             <input
               type="text"
               value={toAddress}
@@ -162,7 +185,7 @@ export function BlockchainDemo() {
             {transferTxStatus === 'success' ? <SuccessMessage message="Transfer confirmed." /> : null}
             {transferTxHash ? (
               <p style={{ marginTop: '0.5rem' }}>
-                <strong>Tx:</strong>{' '}
+                <strong>Transfer tx:</strong>{' '}
                 {txExplorerUrl(transferTxHash) ? (
                   <a href={txExplorerUrl(transferTxHash) as string} target="_blank" rel="noreferrer">
                     {truncateAddress(transferTxHash)}
@@ -172,7 +195,7 @@ export function BlockchainDemo() {
                 )}
               </p>
             ) : null}
-          </div>
+          </section>
         </>
       )}
     </div>
